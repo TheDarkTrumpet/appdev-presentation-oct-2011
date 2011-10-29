@@ -1,0 +1,20 @@
+Problem:
+MBA:problem1 dthole$ cut -f 1 hg18_refFlat | sed -e 's/chr//g' | sort | uniq | xargs -I{} sh -c "grep '^chr{}' hg18_refFlat | awk 'BEGIN{COUNTER=0;SUM=0} {SUM += \$3-\$2;COUNTER++} END{print \"chr{}\t\" SUM/COUNTER \"\t\" SUM \"\t\" COUNTER}'" | grep -P 'chr[0-9XY]{0,2}\t'
+...
+chr2	60855.2	278047243	4569
+chr20	45621.5	45986456	1008
+chr21	58957.4	26825623	455
+chr22	40684.9	33931173	834
+...
+
+Correct:
+MBA:problem1 dthole$ cut -f 1 hg18_refFlat | sed -e 's/chr//g' | sort -n | uniq | xargs -I{} sh -c "grep -P '^chr{}\t' hg18_refFlat | awk 'BEGIN{COUNTER=0;SUM=0} {SUM += \$3-\$2;COUNTER++} END{print \"chr{}\t\" SUM/COUNTER \"\t\" SUM \"\t\" COUNTER}'" | grep -P 'chr[0-9XY]{0,2}\t'
+chr2	75565	171079248	2264
+chr20	45621.5	45986456	1008
+chr21	59212.4	26763991	452
+chr22	40810.9	33873062	830
+
+chr20 + 21 + 22 + (correct) chr2 => 45986456 + 26825623 + 33931173 + 171079248 => 27782250
+
+Delta between this and the reported chr: 278047243 - 27782250 => 224743
+

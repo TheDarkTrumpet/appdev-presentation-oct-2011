@@ -1,0 +1,47 @@
+# Script file, the # means comment
+
+head hg18_refFlat
+
+# we want to pull out columns 1, 2 3
+
+cut -f 1,2,3 hg18_refFlat | head
+awk '{print $1 "\t" $2 "\t" $3}' hg18_refFlat | head
+
+# We want to convert this into a CSV
+cut -f 1,2,3 hg18_refFlat | sed -E 's/\t/,/g' | head
+awk '{print $1 "," $2 "," $3}' hg18_refFlat | head
+
+# Want headers?
+echo "chr,start,stop" && awk '{print $1 "," $2 "," $3}' hg18_refFlat | head
+
+# Compute the average genomic distance of a gene in refFlat
+awk 'BEGIN{COUNTER=0;SUM=0} {SUM += $3-$2;COUNTER++} END{print SUM/COUNTER "\t" SUM "\t" COUNTER}' hg18_refFlat
+
+# Just chromosome 1?
+grep '^chr1' hg18_refFlat | awk 'BEGIN{COUNTER=0;SUM=0} {SUM += $3-$2;COUNTER++} END{print SUM/COUNTER "\t" SUM "\t" COUNTER}'
+
+# Number of genes for refFlat for chromosome 1-5
+seq 1 5 | xargs -I{} sh -c "echo chr{} && grep '^chr{}' hg18_refFlat | wc -l"
+
+# Number of genes, per chromosome, all together
+cut -f 1 hg18_refFlat | sort | uniq -c
+
+# Revisiting average, but for chromosomes 1-5
+seq 1 5 | xargs -I{} sh -c "grep '^chr{}' hg18_refFlat | awk 'BEGIN{COUNTER=0;SUM=0} {SUM += \$3-\$2;COUNTER++} END{print SUM/COUNTER \"\t\" SUM \"\t\" COUNTER}'"
+
+# Revisiting average, but for all chromosomes
+cut -f 1 hg18_refFlat | sort | uniq | xargs -I{} sh -c "grep '^{}' hg18_refFlat | awk 'BEGIN{COUNTER=0;SUM=0} {SUM += \$3-\$2;COUNTER++} END{print \"{}\t\" SUM/COUNTER \"\t\" SUM \"\t\" COUNTER}'"
+
+# Wanting the non-randomish chromosomes
+cut -f 1 hg18_refFlat | sort | uniq | xargs -I{} sh -c "grep '^{}' hg18_refFlat | awk 'BEGIN{COUNTER=0;SUM=0} {SUM += \$3-\$2;COUNTER++} END{print \"{}\t\" SUM/COUNTER \"\t\" SUM \"\t\" COUNTER}'" | grep -P 'chr[0-9XY]{0,2}\t'
+
+# Sorting the list
+cut -f 1 hg18_refFlat | sed -e 's/chr//g' | sort -n | uniq | xargs -I{} sh -c "grep -P '^chr{}\t' hg18_refFlat | awk 'BEGIN{COUNTER=0;SUM=0} {SUM += \$3-\$2;COUNTER++} END{print \"chr{}\t\" SUM/COUNTER \"\t\" SUM \"\t\" COUNTER}'" | grep -P 'chr[0-9XY]{0,2}\t'
+
+or
+
+cut -f 1 hg18_refFlat | sed -e 's/chr//g' | sort -n | uniq | xargs -I{} sh -c "grep -P '^chr{}\t' hg18_refFlat | awk 'BEGIN{COUNTER=0;SUM=0} {SUM += \$3-\$2;COUNTER++} END{print \"chr{}\t\" SUM/COUNTER \"\t\" SUM \"\t\" COUNTER}'" | grep -E '^chr[0-9XY]{1,2}'$'\t'
+
+
+
+
