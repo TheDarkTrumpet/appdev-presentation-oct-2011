@@ -1,0 +1,9 @@
+UI Developer Community Presentation
+31Oct2011
+
+presentation.pdf - The presentation itself
+problem1 - Basic file reformatting, tabs to csv, etc
+problem2 - Bed file into SQL file for SQLite
+problem3 - Bunch of PHP files, reformatting each to be more consistent
+problem4 - Large number of files, figuring out the differences between two sets using md5/sort
+problem5 - Multiprocessing with xargs.
