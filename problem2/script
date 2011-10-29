@@ -1,0 +1,24 @@
+# Problem 2 script
+
+cat schema.sql
+
+Bad Version:
+awk 'BEGIN{ print "BEGIN TRANSACTION;" } { print "INSERT INTO genes (chr, start_region, stop_region, name, strand) VALUES ($1, $2, $3, $4, $6);"} END{ print "COMMIT;"}' hg18_refFlat > hg18_refFlat.sql
+
+awk 'BEGIN{ print "BEGIN TRANSACTION;" } { print "INSERT INTO genes (chr, start_region, stop_region, name, strand) VALUES (\""$1"\", "$2", "$3", \""$4"\", \""$6"\");"} END{ print "COMMIT;"}' hg18_refFlat > hg18_refFlat.sql
+
+sqlite3 foo.sql < schema.sql;
+
+sqlite3 foo.sql
+.schema
+
+sqlite3 foo.sql < hg18_refFlat.sql
+
+sqlite3 foo.sql
+select * from genes limit 5;
+select count(*) from genes where chr='chr1';
+create index idx_name on genes(NAME);
+
+grep -P 'chr1\t' hg18_refFlat | wc -l
+
+
