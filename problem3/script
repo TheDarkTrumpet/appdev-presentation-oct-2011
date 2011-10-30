@@ -1,0 +1,16 @@
+# Problem 3 - Bunch of PHP files needing indenting changes
+
+cat foo*.c
+
+od -a foo1.c
+od -a foo2.c
+od -a foo3.c
+
+find . -type f -name '*.c' -exec ./indent-buffer.sh {} \;
+git diff
+git reset --hard
+
+find . -type f -regex '.*?\(c\|pl\)$' -exec ./indent-buffer.sh {} \;
+git diff
+git reset --hard
+
