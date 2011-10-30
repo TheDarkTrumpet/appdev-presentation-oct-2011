@@ -1,0 +1,29 @@
+# Script for problem 4
+
+ls -l
+ls -l dataset1
+ls -l dataset1/* (note differences)
+
+cat dataset1/*
+cat dataset2/*
+
+ls  dataset1/ | xargs -I{} sh -c "md5sum dataset1/{} | cut -f 1 -d' ' >> ds1.md5"
+ls  dataset1/ | xargs -I{} sh -c "md5sum dataset2/{} | cut -f 1 -d' ' >> ds2.md5"
+diff ds1.md5 ds2.md5
+
+rm ds2.md5
+ls  dataset1/ | xargs -I{} sh -c "md5sum dataset2/{} | cut -f 1 -d' ' >> ds2.md5"
+cat ds2.md5
+
+ls  dataset1/ | xargs -I{} sh -c "md5sum dataset2/{} >> ds2.md5"
+cat ds2.md5
+
+# We could use some file names to know what's really up here.
+
+ls  dataset1/ | xargs -I{} sh -c "md5sum dataset2/{} | sed -E 's/dataset[[:digit:]]+\///' >> ds2.md5"
+cat ds2.md5
+ls  dataset1/ | xargs -I{} sh -c "md5sum dataset2/{} | sed -E 's/dataset[[:digit:]]+\///' >> ds2.md5"
+cat ds2.md5
+
+rm ds*.md5
+
