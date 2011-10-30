@@ -1,0 +1,16 @@
+# Script for Problem 5
+
+zile sleepme.sh
+# Describe what's going on
+
+sh sleepme.sh P01
+
+seq 2 | xargs -I{} -P 2 sh sleepme.sh P{}
+
+# ps aux | grep -i 'sleep'
+
+zile sleepme.sh    #Lower the time
+
+seq 6 | xargs -I{} -P 2 sh sleepme.sh P{}
+
+seq 6 | xargs -I{} -P 6 sh sleepme.sh P{}
